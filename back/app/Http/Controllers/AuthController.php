@@ -9,7 +9,8 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
-    public function register(Request $request) {
+    public function register(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'username' => 'required|unique:users,username',
             'first_name' => 'required',
@@ -19,21 +20,22 @@ class AuthController extends Controller
 
         if ($validator->fails()) {
             $messages = [];
-                foreach ($validator->errors()->getMessages() as $item) {
-                    array_push($messages, $item);
-                }
-                return response()->json(
-                    [
-                        'errors' => [
-                            'messages' => $messages,
-                        ]
-                    ],
-                    422
-                );
+            foreach ($validator->errors()->getMessages() as $item) {
+                array_push($messages, $item);
+            }
+            return response()->json(
+                [
+                    'errors' => [
+                        'messages' => $messages,
+                    ]
+                ],
+                422
+            );
         }
 
         $request_data = $request->all();
-        $user = User::create([
+
+        User::create([
             'username' => $request_data['username'],
             'first_name' => $request_data['first_name'],
             'last_name' => $request_data['last_name'],
@@ -44,7 +46,8 @@ class AuthController extends Controller
         return response()->json(['message' => 'User Created Successfully'], 201);
     }
 
-    public function login(Request $request) {
+    public function login(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'username' => 'required',
             'password' => 'required'
@@ -52,30 +55,30 @@ class AuthController extends Controller
 
         if ($validator->fails()) {
             $messages = [];
-                foreach ($validator->errors()->getMessages() as $item) {
-                    array_push($messages, $item);
-                }
-                return response()->json(
-                    [
-                        'errors' => [
-                            'messages' => $messages,
-                        ]
-                    ],
-                    422
-                );
+            foreach ($validator->errors()->getMessages() as $item) {
+                array_push($messages, $item);
+            }
+            return response()->json(
+                [
+                    'errors' => [
+                        'messages' => $messages,
+                    ]
+                ],
+                422
+            );
         }
 
         $request_data = $request->all();
         $user = User::where('username', $request_data['username'])->first();
 
         if (!$user) {
-            return response()->json(['message', 'Invalid credentials']);
+            return response()->json(['message' => 'Invalid credentials']);
         }
 
         $is_password_valid = Hash::check($request_data['password'], $user->password);
 
         if (!$is_password_valid) {
-            return response()->json(['message', 'Invalid credentials']);
+            return response()->json(['message' => 'Invalid credentials']);
         }
 
         $token = $user->createToken('access_token')->plainTextToken;
