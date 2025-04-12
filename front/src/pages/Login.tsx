@@ -1,20 +1,46 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import logo from "@/assets/Logo.svg";
 import { EyeClosedIcon, EyeIcon } from "lucide-react";
 import { useState } from "react";
 import { Navigate } from "react-router";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { loginSchema } from "@/lib/schemas/loginSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { useLoginMutation } from "@/lib/hooks/use-login-mutation";
 
 export const Login = () => {
-  const isAuthenticated = true;
+  const isAuthenticated = false;
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const togglePassword = () => {
     setShowPassword((oldValue) => !oldValue);
   };
+
+  const form = useForm<z.infer<typeof loginSchema>>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      username: "",
+      password: "",
+    },
+  });
+
+  const { mutation } = useLoginMutation();
+
+  const onSubmit = form.handleSubmit((data) => {
+    mutation.mutate(data);
+  });
 
   if (isAuthenticated) {
     return <Navigate to={"/"} />;
@@ -23,49 +49,71 @@ export const Login = () => {
   return (
     <div className="min-h-svh flex items-center justify-center px-24">
       <Card className="w-[30%]">
-        <CardHeader>
-          <div className="flex items-center justify-center mb-12">
-            <img src={logo} alt="Taski Logo" />
-          </div>
-          <CardTitle className="text-center text-2xl">Login</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form>
-            <div className="grid w-full items-center gap-6">
-              <div className="flex flex-col space-y-2.5">
-                <Label htmlFor="username">Username</Label>
-                <Input id="username" placeholder="Your username" />
+        <Form {...form}>
+          <form onSubmit={onSubmit} className="space-y-8">
+            <CardHeader>
+              <div className="flex items-center justify-center mb-12">
+                <img src={logo} alt="Taski Logo" />
               </div>
-              <div className="flex flex-col space-y-2.5">
-                <Label htmlFor="password">Password</Label>
-                <div className="relative">
-                  <Input
-                    id="password"
-                    placeholder="************"
-                    type={showPassword ? "text" : "password"}
-                    className="pr-10"
-                  />
-                  <Button
-                    variant={"link"}
-                    type="button"
-                    size={"icon"}
-                    className="absolute top-1/2 -right-4 -translate-1/2"
-                    onClick={togglePassword}
-                  >
-                    {showPassword ? (
-                      <EyeClosedIcon className="h-4 w-4" />
-                    ) : (
-                      <EyeIcon className="h-4 w-4" />
-                    )}
-                  </Button>
-                </div>
-              </div>
-            </div>
+              <CardTitle className="text-center text-2xl">Login</CardTitle>
+            </CardHeader>
+            <CardContent className="grid w-full items-center gap-6">
+              <FormField
+                control={form.control}
+                name="username"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Username</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Your username" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <Input
+                          id="password"
+                          placeholder="************"
+                          type={showPassword ? "text" : "password"}
+                          className="pr-10"
+                          {...field}
+                          aria-invalid={!!form.formState.errors.password}
+                        />
+                        <Button
+                          variant={"link"}
+                          type="button"
+                          size={"icon"}
+                          className="absolute top-1/2 -right-4 -translate-1/2"
+                          onClick={togglePassword}
+                        >
+                          {showPassword ? (
+                            <EyeClosedIcon className="h-4 w-4" />
+                          ) : (
+                            <EyeIcon className="h-4 w-4" />
+                          )}
+                        </Button>
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </CardContent>
+            <CardFooter className="flex justify-between">
+              <Button className="w-full" size={"lg"}>
+                {mutation.isPending ? "Loading..." : "Login"}
+              </Button>
+            </CardFooter>
           </form>
-        </CardContent>
-        <CardFooter className="flex justify-between">
-          <Button className="w-full">Login</Button>
-        </CardFooter>
+        </Form>
       </Card>
     </div>
   );

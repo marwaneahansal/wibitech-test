@@ -1,10 +1,16 @@
-import { Button } from "@/components/ui/button";
+import { RouterProvider } from "react-router";
+import { router } from "./router.tsx";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Toaster } from "@/components/ui/sonner";
+
+const queryClient = new QueryClient();
 
 function App() {
   return (
-    <div className="min-h-svh flex items-center justify-center">
-      <Button>Shadcn Button</Button>
-    </div>
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+      <Toaster />
+    </QueryClientProvider>
   );
 }
 
