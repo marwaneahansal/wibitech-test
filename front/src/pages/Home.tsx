@@ -1,3 +1,4 @@
+import { AddTaskDialog } from "@/components/add-task-dialog";
 import { TasksList } from "@/components/tasks-list";
 import { Button } from "@/components/ui/button";
 import { tasks } from "@/lib/data";
@@ -19,10 +20,12 @@ export const Home = () => {
       <div className="mt-8">
         <TasksList tasks={tasks} />
       </div>
-      <Button variant={"ghost"} className="mt-8 text-muted-foreground" size={"lg"}>
-        <PlusSquareIcon className="size-5 ml-2" />
-        Add a new task...
-      </Button>
+      <AddTaskDialog>
+        <Button variant={"ghost"} className="mt-8 text-muted-foreground" size={"lg"}>
+          <PlusSquareIcon className="size-5 ml-2" />
+          Add a new task...
+        </Button>
+      </AddTaskDialog>
     </>
   );
 };
