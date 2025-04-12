@@ -3,7 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 export const Navbar = () => {
   return (
-    <div className="py-4 flex items-center justify-between">
+    <header className="py-4 flex items-center justify-between">
       <div className="max-w-20 h-12">
         <img src={logo} alt="Taski Logo" className="h-full w-full" />
       </div>
@@ -15,6 +15,6 @@ export const Navbar = () => {
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
       </div>
-    </div>
+    </header>
   );
 };

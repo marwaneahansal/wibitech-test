@@ -1,5 +1,5 @@
 import { Navbar } from "@/components/navbar";
-import { Navigate } from "react-router";
+import { Navigate, Outlet } from "react-router";
 
 export const ProtectedLayout = () => {
   const isAuthenticated = true;
@@ -12,6 +12,9 @@ export const ProtectedLayout = () => {
   return (
     <div className="min-h-svh px-24 py-4">
       <Navbar />
+      <div className="mt-8">
+        <Outlet />
+      </div>
     </div>
   )
 }

@@ -123,3 +123,5 @@
 @theme {
   --font-sans: "Inter", sans-serif;
 }
+
+@custom-variant hover (&:hover);
