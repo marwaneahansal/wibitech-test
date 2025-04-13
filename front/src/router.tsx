@@ -1,29 +1,33 @@
-import { createBrowserRouter, RouteObject } from "react-router";
+import { createBrowserRouter, Navigate, RouteObject } from "react-router";
 import { Login } from "./pages/Login";
 import { ProtectedLayout } from "./layouts/ProtectedLayout";
 import { Home } from "./pages/Home";
 
 const protectedRoutes: RouteObject[] = [
   {
-    path: '/',
+    path: "/",
     element: <ProtectedLayout />,
     children: [
       {
-        path: '/',
-        element: <Home />
-      }
-    ]
-  }
-]
+        path: "/",
+        element: <Navigate to={"/tasks"} />,
+      },
+      {
+        path: "/tasks",
+        element: <Home />,
+      },
+    ],
+  },
+];
 
 export const router = createBrowserRouter([
   ...protectedRoutes,
   {
-    path: '/login',
-    element: <Login />
+    path: "/login",
+    element: <Login />,
   },
   {
-    path: '*',
-    element: <h1 className="text-xl">404</h1>
-  }
-])
+    path: "*",
+    element: <h1 className="text-xl">404</h1>,
+  },
+]);

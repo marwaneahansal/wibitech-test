@@ -1,12 +1,12 @@
 import { Navbar } from "@/components/navbar";
+import { useAuth } from "@/hooks/use-auth";
 import { Navigate, Outlet } from "react-router";
 
 export const ProtectedLayout = () => {
-  const isAuthenticated = true;
+  const { isAuthenticated } = useAuth();
 
-  
   if (!isAuthenticated) {
-    return <Navigate to={'/login'} />
+    return <Navigate to={"/login"} />;
   }
 
   return (
@@ -16,5 +16,5 @@ export const ProtectedLayout = () => {
         <Outlet />
       </div>
     </div>
-  )
-}
+  );
+};

@@ -1,7 +1,17 @@
 import logo from "@/assets/Logo.svg";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { useAuth } from "@/hooks/use-auth";
+import { useLogoutMutation } from "@/hooks/queries/auth";
 
 export const Navbar = () => {
+  const { user } = useAuth();
+
+  const { mutation } = useLogoutMutation();
+
+  const logout = () => {
+    mutation.mutate();
+  };
+
   return (
     <header className="py-4 flex items-center justify-between">
       <div className="max-w-20 h-12">
@@ -9,8 +19,8 @@ export const Navbar = () => {
       </div>
 
       <div className="flex items-center gap-x-2">
-        <p className="font-semibold">Admin</p>
-        <Avatar onClick={() => console.log("logout")} className="cursor-pointer size-9">
+        <p className="font-semibold capitalize">{user?.username}</p>
+        <Avatar onClick={logout} className="cursor-pointer size-9">
           <AvatarImage src="https://github.com/shadcn.png" />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>

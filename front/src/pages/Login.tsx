@@ -7,7 +7,7 @@ import { useState } from "react";
 import { Navigate } from "react-router";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { loginSchema } from "@/lib/schemas/loginSchema";
+import { loginSchema } from "@/schemas/loginSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
@@ -17,10 +17,11 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useLoginMutation } from "@/lib/hooks/use-login-mutation";
+import { useLoginMutation } from "@/hooks/queries/auth";
+import { useAuth } from "@/hooks/use-auth";
 
 export const Login = () => {
-  const isAuthenticated = false;
+  const { isAuthenticated } = useAuth();
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
 

@@ -1,15 +1,4 @@
-export type User = {
-  id: number;
-  username: string;
-};
-
-export type Task = {
-  id: number;
-  assignedTo: User;
-  title: string;
-  description: string;
-  status: "in_progress" | "done";
-};
+import { type Task } from "./types";
 
 export const tasks: Task[] = [
   {
