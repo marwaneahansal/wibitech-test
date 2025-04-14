@@ -5,6 +5,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { type Task } from "@/lib/types";
 import { useUpdateTaskMutation } from "@/hooks/queries/tasks";
 import { DeleteTaskDialog } from "./delete-task-dailog";
+import { EditTaskDialog } from "./edit-task-dialog";
 
 export const TaskCard = ({ task }: { task: Task }) => {
   const { user } = useAuth();
@@ -41,13 +42,15 @@ export const TaskCard = ({ task }: { task: Task }) => {
       </div>
       <div className="flex items-center gap-2 group-hover:visible invisible transition duration-500 ease-in-out">
         {task.status === "in_progress" && (
-          <Button
-            size={"icon"}
-            variant={"ghost"}
-            className="hover:text-blue-500 hover:bg-blue-500/10"
-          >
-            <PenIcon className="h-4 w-4" />
-          </Button>
+          <EditTaskDialog task={task}>
+            <Button
+              size={"icon"}
+              variant={"ghost"}
+              className="hover:text-blue-500 hover:bg-blue-500/10"
+            >
+              <PenIcon className="h-4 w-4" />
+            </Button>
+          </EditTaskDialog>
         )}
 
         {user?.role === "admin" && (

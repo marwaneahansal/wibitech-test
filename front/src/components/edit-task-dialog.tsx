@@ -11,28 +11,35 @@ import {
 } from "./ui/dialog";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
-import { useCreateTaskMutation } from "@/hooks/queries/tasks";
+import { useUpdateTaskMutation } from "@/hooks/queries/tasks";
 import { useForm } from "react-hook-form";
-import { createTaskSchema } from "@/schemas/taskSchema";
+import { updateTaskSchema } from "@/schemas/taskSchema";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
 import { DialogDescription } from "@radix-ui/react-dialog";
+import { type Task } from "@/lib/types";
+import { useAuth } from "@/hooks/use-auth";
 import { UsersSelect } from "./users-select";
+import { cn } from "@/lib/utils";
 
-export const AddTaskDialog = ({ children }: { children: React.ReactNode }) => {
+export const EditTaskDialog = ({ task, children }: { children: React.ReactNode; task: Task }) => {
+  const { user } = useAuth();
+  const isAdmin = user?.role === "admin";
+
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const form = useForm<z.input<typeof createTaskSchema>>({
-    resolver: zodResolver(createTaskSchema),
+  const form = useForm<z.input<typeof updateTaskSchema>>({
+    resolver: zodResolver(updateTaskSchema),
     defaultValues: {
-      title: "",
-      description: "",
-      user_id: undefined,
+      id: task.id,
+      title: task.title,
+      description: task.description,
+      user_id: task.user.id,
     },
   });
 
-  const { mutation } = useCreateTaskMutation();
+  const { mutation } = useUpdateTaskMutation();
 
   const onSubmit = form.handleSubmit((data) => {
     mutation.mutate(data, {
@@ -49,12 +56,14 @@ export const AddTaskDialog = ({ children }: { children: React.ReactNode }) => {
         <Form {...form}>
           <form onSubmit={onSubmit} className="space-y-6">
             <DialogHeader>
-              <DialogTitle>Add a New Task</DialogTitle>
+              <DialogTitle>Edit Task</DialogTitle>
             </DialogHeader>
             <DialogDescription />
             <div className="flex flex-col w-full gap-6">
               <div className="grid grid-cols-3 gap-4">
-                <div className="flex flex-col space-y-2.5 col-span-2">
+                <div
+                  className={cn("flex flex-col space-y-2.5", isAdmin ? "col-span-2" : "col-span-3")}
+                >
                   <FormField
                     control={form.control}
                     name="title"
@@ -69,13 +78,20 @@ export const AddTaskDialog = ({ children }: { children: React.ReactNode }) => {
                     )}
                   />
                 </div>
-                <div className="flex flex-col space-y-2.5">
-                  <FormField
-                    control={form.control}
-                    name="user_id"
-                    render={({ field }) => <UsersSelect onChange={field.onChange} />}
-                  />
-                </div>
+                {isAdmin && (
+                  <div className="flex flex-col space-y-2.5">
+                    <FormField
+                      control={form.control}
+                      name="user_id"
+                      render={({ field }) => (
+                        <UsersSelect
+                          onChange={field.onChange}
+                          defaultValue={task.user.id.toString()}
+                        />
+                      )}
+                    />
+                  </div>
+                )}
               </div>
               <div className="flex flex-col space-y-2.5 col-span-2">
                 <FormField
