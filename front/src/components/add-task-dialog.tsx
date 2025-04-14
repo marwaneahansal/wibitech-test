@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "./ui/button";
 import {
   Dialog,
@@ -10,53 +10,123 @@ import {
   DialogTrigger,
 } from "./ui/dialog";
 import { Input } from "./ui/input";
-import { Label } from "./ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { Textarea } from "./ui/textarea";
+import { useCreateTaskMutation, useUsersQuery } from "@/hooks/queries/tasks";
+import { useForm } from "react-hook-form";
+import { createTaskSchema } from "@/schemas/taskSchema";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
+import { DialogDescription } from "@radix-ui/react-dialog";
 
 export const AddTaskDialog = ({ children }: { children: React.ReactNode }) => {
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const { data: users } = useUsersQuery();
+
+  const form = useForm<z.input<typeof createTaskSchema>>({
+    resolver: zodResolver(createTaskSchema),
+    defaultValues: {
+      title: "",
+      description: "",
+      user_id: undefined,
+    },
+  });
+
+  const { mutation } = useCreateTaskMutation();
+
+  const onSubmit = form.handleSubmit((data) => {
+    mutation.mutate(data, {
+      onSuccess: () => {
+        setDialogOpen(false);
+      },
+    });
+  });
+
   return (
-    <Dialog>
+    <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-[35%]">
-        <DialogHeader>
-          <DialogTitle>Add a New Task</DialogTitle>
-        </DialogHeader>
-        <form className="grid grid-cols-1 w-full gap-6">
-          <div className="grid grid-cols-3 gap-4">
-            <div className="flex flex-col space-y-2.5 col-span-2">
-              <Label htmlFor="title">Title</Label>
-              <Input id="title" placeholder="What's on your mind?" />
+        <Form {...form}>
+          <form onSubmit={onSubmit} className="space-y-6">
+            <DialogHeader>
+              <DialogTitle>Add a New Task</DialogTitle>
+            </DialogHeader>
+            <DialogDescription />
+            <div className="flex flex-col w-full gap-6">
+              <div className="grid grid-cols-3 gap-4">
+                <div className="flex flex-col space-y-2.5 col-span-2">
+                  <FormField
+                    control={form.control}
+                    name="title"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Title</FormLabel>
+                        <FormControl>
+                          <Input placeholder="What's on your mind?" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="flex flex-col space-y-2.5">
+                  <FormField
+                    control={form.control}
+                    name="user_id"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Assign to</FormLabel>
+                        <Select onValueChange={field.onChange}>
+                          <SelectTrigger id="assignTo" className="w-full">
+                            <SelectValue placeholder="Assign To" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {users?.map((user) => (
+                              <SelectItem key={user.id} value={user.id.toString()}>
+                                {user.username}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+              <div className="flex flex-col space-y-2.5 col-span-2">
+                <FormField
+                  control={form.control}
+                  name="description"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Description</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          id="description"
+                          placeholder="Add relevant details, blockers, or context for this task here."
+                          className="min-h-[150px]"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
             </div>
-            <div className="flex flex-col space-y-2.5">
-              <Label htmlFor="assignTo">Assign to</Label>
-              <Select>
-                <SelectTrigger id="assignTo" className="w-full">
-                  <SelectValue placeholder="Assign To" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="light">Light</SelectItem>
-                  <SelectItem value="dark">Dark</SelectItem>
-                  <SelectItem value="system">System</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-          <div className="flex flex-col space-y-2.5 col-span-2">
-            <Label htmlFor="description">Description</Label>
-            <Textarea
-              id="description"
-              placeholder="Add relevant details, blockers, or context for this task here."
-              className="min-h-[150px]"
-            />
-          </div>
-        </form>
-        <DialogFooter>
-          <DialogClose asChild>
-            <Button type="button" variant={"outline"}>Cancel</Button>
-          </DialogClose>
-          <Button type="submit">Save</Button>
-        </DialogFooter>
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button type="button" variant={"outline"}>
+                  Cancel
+                </Button>
+              </DialogClose>
+              <Button>Save</Button>
+            </DialogFooter>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );
