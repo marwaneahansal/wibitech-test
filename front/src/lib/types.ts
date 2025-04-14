@@ -8,7 +8,7 @@ export type User = {
 
 export type Task = {
   id: number;
-  assignedTo: Pick<User, "id" | "username">;
+  user: Pick<User, "id" | "username">;
   title: string;
   description: string;
   status: "in_progress" | "done";
