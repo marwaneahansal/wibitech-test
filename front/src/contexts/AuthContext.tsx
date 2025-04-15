@@ -1,4 +1,4 @@
-import { useState, ReactNode, useEffect } from "react";
+import { useState, ReactNode, useEffect, useCallback } from "react";
 import { type User } from "@/lib/types";
 import { AuthContext } from "@/hooks/use-auth";
 
@@ -18,6 +18,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const isAuthenticated = !!user && !!accessToken;
 
+  const setAuthData = useCallback(
+    ({ user, accessToken }: AuthDataType) => {
+      setUser(user);
+      setAccessToken(accessToken);
+
+      if (user && accessToken) {
+        localStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem("accessToken", accessToken);
+      } else {
+        localStorage.removeItem("user");
+        localStorage.removeItem("accessToken");
+      }
+    },
+    []
+  );
+
   // Sync auth data stored in localstorage on mount
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -26,20 +42,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (storedUser && storedToken) {
       setAuthData({ user: JSON.parse(storedUser), accessToken: storedToken });
     }
-  }, []);
-
-  const setAuthData = ({ user, accessToken }: AuthDataType) => {
-    setUser(user);
-    setAccessToken(accessToken);
-
-    if (user && accessToken) {
-      localStorage.setItem("user", JSON.stringify(user));
-      localStorage.setItem("accessToken", accessToken);
-    } else {
-      localStorage.removeItem("user");
-      localStorage.removeItem("accessToken");
-    }
-  };
+  }, [setAuthData]);
 
   return (
     <AuthContext.Provider value={{ user, accessToken, isAuthenticated, setAuthData }}>

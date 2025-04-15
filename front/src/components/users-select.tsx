@@ -1,6 +1,7 @@
 import { useUsersQuery } from "@/hooks/queries/tasks";
 import { FormItem, FormLabel, FormMessage } from "./ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
+import { toast } from "sonner";
 
 export const UsersSelect = ({
   onChange,
@@ -9,7 +10,15 @@ export const UsersSelect = ({
   onChange: (...event: unknown[]) => void;
   defaultValue?: string | undefined;
 }) => {
-  const { data: users } = useUsersQuery();
+  const { data: users, error, isError } = useUsersQuery();
+
+  if (error && isError) {
+    toast.error("Error", {
+      description:
+        error.message || "Something went wrong while getting the users, Please try again later!",
+    });
+    return <p>Error...</p>;
+  }
 
   return (
     <FormItem>

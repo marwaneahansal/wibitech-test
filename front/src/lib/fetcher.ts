@@ -1,3 +1,19 @@
+type ApiData = {
+  message?: string;
+};
+
+export class ApiError extends Error {
+  status: number;
+  data: ApiData;
+
+  constructor(status: number, data: ApiData) {
+    super("API Error");
+    this.name = "ApiError";
+    this.status = status;
+    this.data = data;
+  }
+}
+
 export const fetcher = async (url: string, options: RequestInit = {}) => {
   const accessToken = localStorage.getItem("accessToken");
 
@@ -17,7 +33,7 @@ export const fetcher = async (url: string, options: RequestInit = {}) => {
   const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(data);
+    throw new ApiError(response.status, data);
   }
 
   return data;

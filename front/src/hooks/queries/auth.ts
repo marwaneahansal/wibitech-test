@@ -3,6 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/use-auth";
 import { login, logout } from "@/api/auth";
+import { ApiError } from "@/lib/fetcher";
 
 export const useLoginMutation = () => {
   const navigate = useNavigate();
@@ -11,8 +12,12 @@ export const useLoginMutation = () => {
   const mutation = useMutation({
     mutationFn: login,
     onError: (error: Error) => {
-      toast.error("Failed to login", {
-        description: error.message || "An error occurred, please try again later",
+      let errorMessage = error.message;
+      if (error instanceof ApiError) {
+        errorMessage = error.data.message!;
+      }
+      toast.error("Error", {
+        description: errorMessage || "Something went wrong while login in, please try again later",
       });
     },
     onSuccess: (data) => {
@@ -31,18 +36,27 @@ export const useLogoutMutation = () => {
   const mutation = useMutation({
     mutationFn: logout,
     onError: (error: Error) => {
-      toast.error("Failed to logout", {
-        description: error.message || "An error occurred, please try again later",
+      let errorMessage = error.message;
+      if (error instanceof ApiError) {
+        if (error.status === 401) {
+          setAuthData({ user: null, accessToken: null });
+          navigate("/login");
+        }
+        errorMessage = error.data.message!;
+      }
+
+      toast.error("Error", {
+        description: errorMessage || "Something went wrong while login out, please try again later",
       });
     },
     onSuccess: (data) => {
       setAuthData({ user: null, accessToken: null });
       navigate("/login");
-      toast.error("Success", {
+      toast.success("Success", {
         description: data.message || "Logout Successful",
       });
     },
   });
 
   return { mutation };
-}
+};

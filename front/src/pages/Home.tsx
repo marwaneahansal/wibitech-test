@@ -5,14 +5,23 @@ import { useTasksQuery } from "@/hooks/queries/tasks";
 import { useAuth } from "@/hooks/use-auth";
 import { Task } from "@/lib/types";
 import { PlusSquareIcon } from "lucide-react";
+import { toast } from "sonner";
 
 export const Home = () => {
   const { user } = useAuth();
 
-  const { data, isLoading } = useTasksQuery();
+  const { data, isLoading, isError, error } = useTasksQuery();
 
   if (isLoading) {
     return <p>Loading....</p>;
+  }
+
+  if (isError && error) {
+    toast.error("Error", {
+      description:
+        error.message || "Something went wrong while getting the tasks, Please try again later!",
+    });
+    return <p>Error...</p>;
   }
 
   const tasks: Task[] = data.tasks;
@@ -24,7 +33,7 @@ export const Home = () => {
       <section className="space-y-2">
         <h1 className="text-2xl font-bold">
           Welcome,{" "}
-          <span className="text-blue-500 capitalize">{user?.first_name ?? user?.last_name}</span>.
+          <span className="text-primary capitalize">{user?.first_name ?? user?.last_name}</span>.
         </h1>
         <TasksCountMessage tasksCount={tasksCount} />
       </section>

@@ -20,7 +20,7 @@ export const TaskCard = ({ task }: { task: Task }) => {
   };
 
   return (
-    <div className="px-6 py-4 bg-gray-100 flex items-center justify-between rounded-2xl group">
+    <div className="px-6 py-4 bg-gray-100 flex items-center justify-between rounded-2xl group gap-x-6">
       <div className="space-y-1 flex items-center gap-x-4">
         {task.status === "done" && <Check className="text-blue-500 size-6" />}
         <div>
@@ -32,7 +32,7 @@ export const TaskCard = ({ task }: { task: Task }) => {
           </p>
           <p
             className={cn(
-              "text-muted-foreground overflow-ellipsis text-sm",
+              "text-muted-foreground text-sm",
               task.status === "done" && "line-through"
             )}
           >
