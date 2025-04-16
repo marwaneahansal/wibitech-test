@@ -23,9 +23,27 @@ class TaskController extends Controller
             $query->where('user_id', $user->id);
         }
 
-        $tasks = $query->with('user:id,username')->latest()->get();
+        $progressQuery = clone $query;
+        $tasksInProgressCount = $progressQuery->where('status', 'in_progress')->count();
 
-        return response()->json(['tasks' => $tasks]);
+        if ($request->has("search") && !empty($request->search)) {
+            $searchQuery = $request->search;
+            $query->where(function ($q) use ($searchQuery) {
+                $q->where('title', 'LiKE', "%{$searchQuery}%");
+            });
+        }
+
+        if ($request->has("status") && !empty($request->status) && $request->status != 'all') {
+            $statusQuery = $request->status;
+            $query->where(function ($q) use ($statusQuery) {
+                $q->where('status', $statusQuery);
+            });
+        }
+
+        $response['tasks'] = $query->with('user:id,username')->latest()->paginate(5);
+        $response['tasks_in_progress_count'] = $tasksInProgressCount;
+
+        return response()->json($response);
     }
 
     /**
