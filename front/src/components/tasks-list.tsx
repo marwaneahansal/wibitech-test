@@ -7,7 +7,7 @@ type TasksListProps = {
 };
 
 export const TasksList = ({ tasks }: TasksListProps) => {
-  if (tasks.length === 0) {
+  if (!tasks || tasks.length === 0) {
     return <TasksEmptyState />;
   }
 

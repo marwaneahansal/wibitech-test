@@ -3,17 +3,17 @@ import { ApiError } from "@/lib/fetcher";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useAuth } from "../use-auth";
-import { useNavigate } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 
-export const useTasksQuery = () => {
+export const useTasksQuery = ({ page }: { page: number }) => {
   const { setAuthData } = useAuth();
   const navigate = useNavigate();
 
   return useQuery({
-    queryKey: ["tasks"],
+    queryKey: ["tasks", page],
     queryFn: async () => {
       try {
-        return await getTasks();
+        return await getTasks({ page });
       } catch (error) {
         if (error instanceof ApiError) {
           if (error.status === 401) {
@@ -121,6 +121,7 @@ export const useDeleteTaskMutation = () => {
   const queryClient = useQueryClient();
   const { setAuthData } = useAuth();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const mutation = useMutation({
     mutationFn: deleteTask,
@@ -141,6 +142,8 @@ export const useDeleteTaskMutation = () => {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
+      searchParams.set("page", "1");
+      setSearchParams(searchParams);
       toast.success("Success", {
         description: data.message || "Task deleted successfully",
       });
