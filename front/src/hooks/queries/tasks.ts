@@ -5,15 +5,23 @@ import { toast } from "sonner";
 import { useAuth } from "../use-auth";
 import { useNavigate, useSearchParams } from "react-router";
 
-export const useTasksQuery = ({ page }: { page: number }) => {
+export const useTasksQuery = ({
+  page,
+  searchQuery,
+  statusQuery,
+}: {
+  page: number;
+  searchQuery: string;
+  statusQuery: string;
+}) => {
   const { setAuthData } = useAuth();
   const navigate = useNavigate();
 
   return useQuery({
-    queryKey: ["tasks", page],
+    queryKey: ["tasks", page, searchQuery, statusQuery],
     queryFn: async () => {
       try {
-        return await getTasks({ page });
+        return await getTasks({ page, searchQuery, statusQuery });
       } catch (error) {
         if (error instanceof ApiError) {
           if (error.status === 401) {

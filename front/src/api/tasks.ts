@@ -4,8 +4,18 @@ import { type User } from "@/lib/types";
 import { createTaskSchema, updateTaskSchema } from "@/schemas/taskSchema";
 import { z } from "zod";
 
-export const getTasks = async ({ page }: { page: number }) => {
-  const data = await fetcher(`${API_URL}/tasks?page=${page}`);
+export const getTasks = async ({
+  page,
+  searchQuery,
+  statusQuery,
+}: {
+  page: number;
+  searchQuery: string;
+  statusQuery: string;
+}) => {
+  const data = await fetcher(
+    `${API_URL}/tasks?page=${page}&search=${searchQuery}&status=${statusQuery}`
+  );
 
   return data;
 };

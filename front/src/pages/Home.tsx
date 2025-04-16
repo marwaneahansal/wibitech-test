@@ -1,5 +1,6 @@
 import { AddTaskDialog } from "@/components/add-task-dialog";
 import { LoadingSpinner } from "@/components/loading-spinner";
+import { TasksFilter } from "@/components/tasks-filter";
 import { TasksList } from "@/components/tasks-list";
 import { TasksPagination } from "@/components/tasks-pagination";
 import { Button } from "@/components/ui/button";
@@ -13,9 +14,15 @@ import { toast } from "sonner";
 export const Home = () => {
   const { user } = useAuth();
   const [searchParams] = useSearchParams();
-  const page = searchParams.get("page") || "1";
+  const pageParam = searchParams.get("page") || "1";
+  const searchQueryParam = searchParams.get("search") || "";
+  const statusQueryParam = searchParams.get("status") || "";
 
-  const { data, isLoading, isError, error } = useTasksQuery({ page: parseInt(page) });
+  const { data, isLoading, isError, error } = useTasksQuery({
+    page: parseInt(pageParam),
+    searchQuery: searchQueryParam,
+    statusQuery: statusQueryParam,
+  });
 
   if (isLoading) {
     return <LoadingSpinner />;
@@ -36,10 +43,13 @@ export const Home = () => {
   return (
     <>
       <section className="space-y-2">
-        <h1 className="text-2xl font-bold">
-          Welcome,{" "}
-          <span className="text-primary capitalize">{user?.first_name ?? user?.last_name}</span>.
-        </h1>
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-bold">
+            Welcome,{" "}
+            <span className="text-primary capitalize">{user?.first_name || user?.username}</span>.
+          </h1>
+          <TasksFilter />
+        </div>
         <TasksCountMessage tasksCount={tasksCount} />
       </section>
       <div className="mt-8">
@@ -54,7 +64,7 @@ export const Home = () => {
             </Button>
           </AddTaskDialog>
         )}
-        <TasksPagination currentPage={data.tasks.current_page} totalPages={data.tasks.total} />
+        <TasksPagination currentPage={data.tasks.current_page} totalPages={data.tasks.last_page} />
       </div>
     </>
   );
