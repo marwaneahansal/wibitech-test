@@ -38,6 +38,7 @@ export const AddTaskDialog = ({ children }: { children: React.ReactNode }) => {
     mutation.mutate(data, {
       onSuccess: () => {
         setDialogOpen(false);
+        form.reset();
       },
     });
   });

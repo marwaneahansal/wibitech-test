@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/use-auth";
 import { login, logout } from "@/api/auth";
@@ -32,6 +32,7 @@ export const useLoginMutation = () => {
 export const useLogoutMutation = () => {
   const navigate = useNavigate();
   const { setAuthData } = useAuth();
+  const queryClient = useQueryClient();
 
   const mutation = useMutation({
     mutationFn: logout,
@@ -50,6 +51,7 @@ export const useLogoutMutation = () => {
       });
     },
     onSuccess: (data) => {
+      queryClient.clear();
       setAuthData({ user: null, accessToken: null });
       navigate("/login");
       toast.success("Success", {

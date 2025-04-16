@@ -22,10 +22,10 @@ export const TaskCard = ({ task }: { task: Task }) => {
   return (
     <div className="px-6 py-4 bg-gray-100 flex items-center justify-between rounded-2xl group gap-x-6">
       <div className="space-y-1 flex items-center gap-x-4">
-        {task.status === "done" && <Check className="text-blue-500 size-6" />}
+        {task.status === "done" && <Check className="text-primary size-6" />}
         <div>
           {user?.role === "admin" && (
-            <p className="text-blue-500 text-sm font-medium">@{task.user.username}</p>
+            <p className="text-primary text-sm font-medium">@{task.user.username}</p>
           )}
           <p className={cn("text-lg font-semibold", task.status === "done" && "line-through")}>
             {task.title}
@@ -40,13 +40,13 @@ export const TaskCard = ({ task }: { task: Task }) => {
           </p>
         </div>
       </div>
-      <div className="flex items-center gap-2 group-hover:visible invisible transition duration-500 ease-in-out">
+      <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
         {task.status === "in_progress" && (
           <EditTaskDialog task={task}>
             <Button
               size={"icon"}
               variant={"ghost"}
-              className="hover:text-blue-500 hover:bg-blue-500/10"
+              className="hover:text-primary hover:bg-blue-500/10"
             >
               <PenIcon className="h-4 w-4" />
             </Button>

@@ -21,9 +21,7 @@ Route::prefix('auth')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
 
-    Route::get('/test', function () {
-        return response()->json(['message' => 'Json Response']);
-    });
+    Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
 });
 
 Route::prefix('tasks')->middleware('auth:sanctum')->group(function () {
@@ -37,13 +35,3 @@ Route::prefix('tasks')->middleware('auth:sanctum')->group(function () {
 Route::prefix('users')->middleware('auth:sanctum')->group(function () {
     Route::middleware('role:admin')->get('', [UserController::class, 'index']);
 });
-
-// Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
-//     Route::get('/admin-only', function () {
-//         return response()->json(['message' => 'This is only accessible by admin']);
-//     });
-// });
-
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });

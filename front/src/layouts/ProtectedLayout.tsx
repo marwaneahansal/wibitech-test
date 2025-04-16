@@ -1,9 +1,14 @@
+import { LoadingSpinner } from "@/components/loading-spinner";
 import { Navbar } from "@/components/navbar";
 import { useAuth } from "@/hooks/use-auth";
 import { Navigate, Outlet } from "react-router";
 
 export const ProtectedLayout = () => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isLoading } = useAuth();
+
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
 
   if (!isAuthenticated) {
     return <Navigate to={"/login"} />;

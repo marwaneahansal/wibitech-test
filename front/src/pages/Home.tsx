@@ -1,4 +1,5 @@
 import { AddTaskDialog } from "@/components/add-task-dialog";
+import { LoadingSpinner } from "@/components/loading-spinner";
 import { TasksList } from "@/components/tasks-list";
 import { Button } from "@/components/ui/button";
 import { useTasksQuery } from "@/hooks/queries/tasks";
@@ -13,7 +14,7 @@ export const Home = () => {
   const { data, isLoading, isError, error } = useTasksQuery();
 
   if (isLoading) {
-    return <p>Loading....</p>;
+    return <LoadingSpinner />;
   }
 
   if (isError && error) {
@@ -38,7 +39,7 @@ export const Home = () => {
         <TasksCountMessage tasksCount={tasksCount} />
       </section>
       <div className="mt-8">
-        <TasksList tasks={data.tasks} />
+        <TasksList tasks={tasks} />
       </div>
       {user?.role === "admin" && (
         <AddTaskDialog>

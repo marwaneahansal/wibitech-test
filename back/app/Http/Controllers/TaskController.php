@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreTaskRequest;
+use App\Http\Requests\UpdateTaskRequest;
 use Illuminate\Http\Request;
 use App\Models\Task;
-use Illuminate\Support\Facades\Validator;
 
 
 class TaskController extends Controller
@@ -22,7 +23,7 @@ class TaskController extends Controller
             $query->where('user_id', $user->id);
         }
 
-        $tasks = $query->get();
+        $tasks = $query->with('user:id,username')->latest()->get();
 
         return response()->json(['tasks' => $tasks]);
     }
@@ -30,30 +31,9 @@ class TaskController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreTaskRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'title' => 'required',
-            'description' => 'required',
-            'user_id' => 'required|exists:users,id',
-        ]);
-
-        if ($validator->fails()) {
-            $messages = [];
-            foreach ($validator->errors()->getMessages() as $item) {
-                array_push($messages, $item);
-            }
-            return response()->json(
-                [
-                    'errors' => [
-                        'messages' => $messages,
-                    ]
-                ],
-                422
-            );
-        }
-
-        $request_data = $request->all();
+        $request_data = $request->validated();
 
         $task = Task::create([
             'title' => $request_data['title'],
@@ -83,31 +63,9 @@ class TaskController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateTaskRequest $request, string $id)
     {
         $user = $request->user();
-
-        $validator = Validator::make($request->all(), [
-            'title' => 'sometimes',
-            'description' => 'sometimes',
-            'status' => 'sometimes|in:in_progress,done',
-            'user_id' => 'sometimes|exists:users,id'
-        ]);
-
-        if ($validator->fails()) {
-            $messages = [];
-            foreach ($validator->errors()->getMessages() as $item) {
-                array_push($messages, $item);
-            }
-            return response()->json(
-                [
-                    'errors' => [
-                        'messages' => $messages,
-                    ]
-                ],
-                422
-            );
-        }
 
         $task = Task::findOrFail($id);
 
@@ -115,7 +73,7 @@ class TaskController extends Controller
             return response()->json(['message' => 'You\re not allowed to update this task', 403]);
         }
 
-        $request_data = $request->all();
+        $request_data = $request->validated();
 
         $task->title = $request_data['title'] ?? $task->title;
         $task->description = $request_data['description'] ?? $task->description;

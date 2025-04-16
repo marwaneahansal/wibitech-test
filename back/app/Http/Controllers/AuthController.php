@@ -2,38 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AuthLoginRequest;
+use App\Http\Requests\AuthRegisterRequest;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
-    public function register(Request $request)
+    public function register(AuthRegisterRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'username' => 'required|unique:users,username',
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'password' => 'required|min:6'
-        ]);
-
-        if ($validator->fails()) {
-            $messages = [];
-            foreach ($validator->errors()->getMessages() as $item) {
-                array_push($messages, $item);
-            }
-            return response()->json(
-                [
-                    'errors' => [
-                        'messages' => $messages,
-                    ]
-                ],
-                422
-            );
-        }
-
-        $request_data = $request->all();
+        $request_data = $request->validated();
 
         User::create([
             'username' => $request_data['username'],
@@ -46,44 +25,32 @@ class AuthController extends Controller
         return response()->json(['message' => 'User Created Successfully'], 201);
     }
 
-    public function login(Request $request)
+    public function login(AuthLoginRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'username' => 'required',
-            'password' => 'required'
-        ]);
+        $request_data = $request->validated();
 
-        if ($validator->fails()) {
-            $messages = [];
-            foreach ($validator->errors()->getMessages() as $item) {
-                array_push($messages, $item);
-            }
-            return response()->json(
-                [
-                    'errors' => [
-                        'messages' => $messages,
-                    ]
-                ],
-                422
-            );
-        }
-
-        $request_data = $request->all();
         $user = User::where('username', $request_data['username'])->first();
 
         if (!$user) {
-            return response()->json(['message' => 'Invalid credentials']);
+            return response()->json(['message' => 'Invalid credentials'], 401);
         }
 
         $is_password_valid = Hash::check($request_data['password'], $user->password);
 
         if (!$is_password_valid) {
-            return response()->json(['message' => 'Invalid credentials']);
+            return response()->json(['message' => 'Invalid credentials'], 401);
         }
 
         $token = $user->createToken('access_token')->plainTextToken;
 
 
         return response()->json(['access_token' => $token, 'user' => $user]);
+    }
+
+    public function logout(Request $request)
+    {
+        $request->user()->currentAccessToken()->delete();
+
+        return response()->json(['message' => 'Logout successful']);
     }
 }
