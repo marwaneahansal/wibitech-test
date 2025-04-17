@@ -105,6 +105,8 @@ The test suite includes:
 
 - TasksTest: tests CRUD operations and access control for tasks
 
+- UsersTest: tests user management functionalities
+
 ## Features
 
 - User authentication and authorization
@@ -140,6 +142,12 @@ The test suite includes:
 | PUT    | /api/tasks/{id}      | Update an existing task (admin can update any task, regular users can only update the title, description and status on their own tasks)               |
 | DELETE | /api/tasks/{id}      | Delete a task (admin can delete any task, regular users can only delete their own tasks)                                                              |
 
+### Users Management Endpoints
+
+| Method | Endpoint             | Description                                         |
+|--------|----------------------|-----------------------------------------------------|
+| GET    | /api/users           | Get all users (admin only)                          |
+
 ## Built with
 
 - Laravel
@@ -149,47 +157,47 @@ The test suite includes:
 
 ## Project Structure
 
-back/
-├── app/
-│   ├── Console/             # Artisan commands
-│   ├── Exceptions/          # Custom exception handlers
-│   ├── Http/
-│   │   ├── Controllers/     # Route logic (e.g., AuthController, TaskController, UserController)
-│   │   ├── Middleware/      # HTTP middleware stack
-│   │   └── Requests/        # Form request validation
-│   ├── Models/              # Eloquent models (e.g., User, Task)
-│   └── Providers/           # Service providers
-│
-├── database/
-│   ├── factories/           # Model factories for seeding
-│   ├── migrations/          # Database schema definitions
-│   └── seeders/             # Database seeders (initial data)
-│
-├── routes/
-│   └── api.php              # API routes definition
-│
-├── tests/
-│   └── Feature/             # Feature tests (e.g., AuthTest, TasksTest)
-│
-├── .env.example             # Example environment config
-├── composer.json            # Project dependencies
-└── README.md
+  back/
+  ├── app/
+  │   ├── Console/             # Artisan commands
+  │   ├── Exceptions/          # Custom exception handlers
+  │   ├── Http/
+  │   │   ├── Controllers/     # Route logic (e.g., AuthController, TaskController, UserController)
+  │   │   ├── Middleware/      # HTTP middleware stack
+  │   │   └── Requests/        # Form request validation
+  │   ├── Models/              # Eloquent models (e.g., User, Task)
+  │   └── Providers/           # Service providers
+  │
+  ├── database/
+  │   ├── factories/           # Model factories for seeding
+  │   ├── migrations/          # Database schema definitions
+  │   └── seeders/             # Database seeders (initial data)
+  │
+  ├── routes/
+  │   └── api.php              # API routes definition
+  │
+  ├── tests/
+  │   └── Feature/             # Feature tests (e.g., AuthTest, TasksTest)
+  │
+  ├── .env.example             # Example environment config
+  ├── composer.json            # Project dependencies
+  └── README.md
 
 ## Future Improvements
 
 This section outlines the potential future improvements and enhancements that could be made to the project.
 
-- Better Role Management:
+- **Better Role Management**:
 While role-based logic is currently handled inside controllers for simplicity, further enhancements could include implementing a more granular permission system that allows for custom roles and permissions.
 
-- User profile management:
+- **User profile management**:
 Allow users to update their profiles, including changing passwords and updating personal information.
 
-- Refresh tokens:
+- **Refresh tokens**:
 Implementing refresh tokens for better security and user experience.
 
-- Rate limiting and Throttling:
+- **Rate limiting and Throttling**:
 Add request throttling to auth routes to prevent brute-force attacks.
 
-- Documentation:
+- **Documentation**:
 Improving documentation and adding API documentation using tools like Swagger or Postman Collection.
