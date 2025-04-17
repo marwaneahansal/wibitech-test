@@ -88,7 +88,7 @@ class TaskController extends Controller
         $task = Task::findOrFail($id);
 
         if ($user->role !== 'admin' && $user->id !== $task->user_id) {
-            return response()->json(['message' => 'You\re not allowed to update this task', 403]);
+            return response()->json(['message' => 'Forbidden'], 403);
         }
 
         $request_data = $request->validated();
