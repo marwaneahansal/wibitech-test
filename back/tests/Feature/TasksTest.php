@@ -24,6 +24,14 @@ class TasksTest extends TestCase
         $this->user = User::factory()->create(['role' => 'user']);
     }
 
+    public function test_unauthenticated_user_cannot_see_tasks(): void
+    {
+        $response = $this->getJson('/api/tasks');
+
+        $response->assertStatus(401);
+        $response->assertJson(['message' => 'Unauthenticated.']);
+    }
+
     public function test_admin_can_see_all_tasks(): void
     {
         $task = Task::factory()->create();

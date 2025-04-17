@@ -32,13 +32,13 @@ class AuthController extends Controller
         $user = User::where('username', $request_data['username'])->first();
 
         if (!$user) {
-            return response()->json(['message' => 'Invalid credentials'], 401);
+            return response()->json(['message' => 'Invalid credentials'], 404);
         }
 
         $is_password_valid = Hash::check($request_data['password'], $user->password);
 
         if (!$is_password_valid) {
-            return response()->json(['message' => 'Invalid credentials'], 401);
+            return response()->json(['message' => 'Invalid credentials'], 404);
         }
 
         $token = $user->createToken('access_token')->plainTextToken;
