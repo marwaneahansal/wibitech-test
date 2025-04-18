@@ -56,13 +56,13 @@ DB_HOST=db
 DB_PORT=3306
 DB_DATABASE=taski                # the name of the database (same as MYSQL_DATABASE if you're using the MySql container)
 DB_USERNAME=root                 # the name of the database (should be root if you're using the MySql container)
-DB_PASSWORD=                     # the password of the database (same as MYSQL_ROOT_PASSWORD if you're using the MySql container)
+DB_PASSWORD=db_password          # the password of the database (same as MYSQL_ROOT_PASSWORD if you're using the MySql container)
 ```
 
 - Frontend (`./front/.env`):
 
 ```bash
-VITE_API_URL=api_url/api   # the base URL of the api (should be http://back:8000/api if you're using the back container)
+VITE_API_URL=api_url/api   # the base URL of the api
 ```
 
 3. Run the stack

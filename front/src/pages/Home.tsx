@@ -33,7 +33,7 @@ export const Home = () => {
       description:
         error.message || "Something went wrong while getting the tasks, Please try again later!",
     });
-    return <p>Error...</p>;
+    return <p className="text-red-500">Error while getting tasks!</p>;
   }
 
   const tasks: Task[] = data.tasks.data;

@@ -17,7 +17,7 @@ export const UsersSelect = ({
       description:
         error.message || "Something went wrong while getting the users, Please try again later!",
     });
-    return <p>Error...</p>;
+    return <p className="text-red-500">Error while getting users!</p>;
   }
 
   return (
