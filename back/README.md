@@ -28,12 +28,10 @@ The things you need before using the project
 
 ### Development Setup
 
-1. Clone the repository and change the directory to the back folder
+1. Change the directory to the back folder
 
 ```bash
-git clone git@github.com:marwaneahansal/wibitech-test.git
-
-cd wibitech-test/back
+cd ./back
 ```
 
 2. Setup environment variables
@@ -157,31 +155,31 @@ The test suite includes:
 
 ## Project Structure
 
-  back/
-  ├── app/
-  │   ├── Console/             # Artisan commands
-  │   ├── Exceptions/          # Custom exception handlers
-  │   ├── Http/
-  │   │   ├── Controllers/     # Route logic (e.g., AuthController, TaskController, UserController)
-  │   │   ├── Middleware/      # HTTP middleware stack
-  │   │   └── Requests/        # Form request validation
-  │   ├── Models/              # Eloquent models (e.g., User, Task)
-  │   └── Providers/           # Service providers
-  │
-  ├── database/
-  │   ├── factories/           # Model factories for seeding
-  │   ├── migrations/          # Database schema definitions
-  │   └── seeders/             # Database seeders (initial data)
-  │
-  ├── routes/
-  │   └── api.php              # API routes definition
-  │
-  ├── tests/
-  │   └── Feature/             # Feature tests (e.g., AuthTest, TasksTest)
-  │
-  ├── .env.example             # Example environment config
-  ├── composer.json            # Project dependencies
-  └── README.md
+    back/
+    ├── app/
+    │   ├── Console/             # Artisan commands
+    │   ├── Exceptions/          # Custom exception handlers
+    │   ├── Http/
+    │   │   ├── Controllers/     # Route logic (e.g., AuthController, TaskController, UserController)
+    │   │   ├── Middleware/      # HTTP middleware stack
+    │   │   └── Requests/        # Form request validation
+    │   ├── Models/              # Eloquent models (e.g., User, Task)
+    │   └── Providers/           # Service providers
+    │
+    ├── database/
+    │   ├── factories/           # Model factories for seeding
+    │   ├── migrations/          # Database schema definitions
+    │   └── seeders/             # Database seeders (initial data)
+    │
+    ├── routes/
+    │   └── api.php              # API routes definition
+    │
+    ├── tests/
+    │   └── Feature/             # Feature tests (e.g., AuthTest, TasksTest)
+    │
+    ├── .env.example             # Example environment config
+    ├── composer.json            # Project dependencies
+    └── README.md
 
 ## Future Improvements
 

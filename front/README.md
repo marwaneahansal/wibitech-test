@@ -1,54 +1,121 @@
-# React + TypeScript + Vite
+# Taski Front-End
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the frontend for Taski, a simple task management app. It interacts with the Laravel backend API to manage user authentication, roles, and task managements.
 
-Currently, two official plugins are available:
+## Table of contents
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Development Setup](#development-setup)
+- [Features](#features)
+- [Built with](#built-with)
+- [Project Structure](#project-structure)
+- [Philosophy & Design Decisions](#philosophy--design-decisions)
 
-## Expanding the ESLint configuration
+## Getting Started
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+These instructions will help you get the frontend running locally.
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+### Prerequisites
+
+The things you need before using the project
+
+- Node.js
+- npm
+- Backend running locally (see [Taski Back-End](../back/README.md))
+
+### Development Setup
+
+1. Go to the front folder
+
+```bash
+cd ./front
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+2. Install dependencies
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+```bash
+npm install
 ```
+
+3. Make sure to change your Backend server url in [./src/lib/constants.ts](./src/lib/constants.ts)
+
+```typescript
+export const API_URL = "http://localhost:8000/api";   // Your Backend server url
+```
+
+4. Run the development server
+
+```bash
+npm run dev
+```
+
+## Features
+
+- User authentication (login/logout)
+
+- View and manage tasks
+  - Admin can view all tasks, regular users see their own
+  - Create, update, and delete tasks (according to role)
+  - Filter by title and status
+  - Pagination for task lists
+
+- Notifications and error handling via toast
+
+- Responsive design for mobile and desktop
+
+- Different user roles:
+  - Admin: Can view, create, update, and delete any task and user.
+  - Regular User: Can view their own tasks and update or delete them.
+
+## Built with
+
+- React 19
+- Typescript
+- Tailwind CSS
+- Shadcn UI
+- React Query
+- React Hook form + zod
+- React Router
+- Vite
+
+## Project Structure
+
+    front/
+    ├── public/
+    ├── src/
+    │   ├── api/                  # API service functions for interacting with the backend
+    │   ├── components/           # Reusable UI components
+    │   |    └── ui/              # UI components from shadcn/ui
+    │   ├── contexts/             # Global React contexts (e.g., AuthContext)
+    │   ├── hooks/                # Custom React hooks
+    │   |    ├── queries/         # React Query-based data fetching hooks
+    │   |    └── use-auth.ts      # Hook for accessing auth context
+    │   ├── layouts/              # Layout components for wrapping pages
+    │   ├── lib/                  # Utilities and shared logic (fetcher, constants, types, etc.)
+    │   ├── pages/                # Page-level components (Login, Home, etc.)
+    │   ├── schemas/              # Zod validation schemas
+    │   ├── routes.tsx            # Route configuration for React Router
+    │   ├── App.tsx               # Root component
+    │   └── main.tsx              # Entry point for the application
+    ├── vite.config.ts
+    └── README.md
+    
+## Philosophy & Design Decisions
+
+This section outlines the core philosophy and design decisions made during the development of the project. It aims to provide insight into the reasoning behind the architecture and technology choices.
+
+- **Modular structure**:
+The project is structured around separation of concerns—components, logic, and API calls are cleanly separated for maintainability.
+
+- **UI with shadcn/ui**:
+I chose shadcn/ui to move faster without sacrificing flexibility or custom design. It provides a set of clean, accessible, and minimal components that work great with Tailwind CSS.
+
+- **React Query**:
+Chosen for its great caching and auto-refetching capabilities, perfect for API-heavy apps like this.
+
+- **Zod + React Hook Form**:
+For robust client-side validation, leveraging Zod’s schema parsing and transform tools.
+
+- **Simplified Role Logic**:
+Currently, user roles (admin vs. regular user) are handled using conditional logic throughout the UI—rendering different components or actions based on the authenticated user’s role. For this project’s scope, this works well. However, in a more feature-rich application, it would make sense to separate role access at the page or route level.

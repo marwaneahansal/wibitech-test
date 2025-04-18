@@ -44,7 +44,6 @@ export const TasksFilter = () => {
       searchParams.set("status", statusValue);
     }
 
-
     setSearchParams(searchParams);
   };
 
