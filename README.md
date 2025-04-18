@@ -22,6 +22,7 @@ See [`/front/README.md`](./front/README.md) for setup and usage.
 ## Getting Started with Docker
 
 To spin up the full application stack using Docker Compose (frontend, backend, and database):
+
 Note: This is only for development purposes only
 
 ### Prerequisites
@@ -35,12 +36,12 @@ Note: This is only for development purposes only
 
 ```bash
 cp back/.env.example back/.env
-cp cp front/.env.example front/.env
+cp front/.env.example front/.env
 ```
 
 2. Fill the necessary environment variables
 
-- Backend:
+- Backend (`./back/.env`):
 
 ```bash
 ADMIN_PASSWORD=admin_password   # used to seed the admin user
@@ -58,7 +59,7 @@ DB_USERNAME=root                 # the name of the database (should be root if y
 DB_PASSWORD=                     # the password of the database (same as MYSQL_ROOT_PASSWORD if you're using the MySql container)
 ```
 
-- Frontend
+- Frontend (`./front/.env`):
 
 ```bash
 VITE_API_URL=api_url/api   # the base URL of the api (should be http://back:8000/api if you're using the back container)

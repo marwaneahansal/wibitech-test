@@ -13,6 +13,7 @@ services:
       - db
     volumes:
       - ./back:/app/
+      - vendor:/app/vendor
     networks:
       - taski-network
 
@@ -70,6 +71,12 @@ volumes:
       type: none
       o: bind
       device: ./front/node_modules
+  vendor:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./back/vendor
 
 networks:
   taski-network:
