@@ -1,5 +1,7 @@
 FROM php:8.3-cli
 
+USER root
+
 WORKDIR /app
 
 RUN apt-get update && apt-get install -y \
