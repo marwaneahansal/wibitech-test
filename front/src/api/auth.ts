@@ -1,7 +1,8 @@
 import { z } from "zod";
 import { loginSchema } from "@/schemas/loginSchema";
-import { API_URL } from "@/lib/constants";
 import { fetcher } from "@/lib/fetcher";
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const login = async (body: z.infer<typeof loginSchema>) => {
   const data = await fetcher(`${API_URL}/auth/login`, {

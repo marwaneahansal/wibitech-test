@@ -2,6 +2,7 @@ import logo from "@/assets/Logo.svg";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { useAuth } from "@/hooks/use-auth";
 import { useLogoutMutation } from "@/hooks/queries/auth";
+import defaultAvatar from "@/assets/default_avatar.png";
 
 export const Navbar = () => {
   const { user } = useAuth();
@@ -21,7 +22,7 @@ export const Navbar = () => {
       <div className="flex items-center gap-x-2">
         <p className="font-semibold capitalize">{user?.username}</p>
         <Avatar onClick={logout} className="cursor-pointer size-9">
-          <AvatarImage src="https://github.com/shadcn.png" />
+          <AvatarImage src={defaultAvatar} />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
       </div>

@@ -38,13 +38,19 @@ cd ./front
 npm install
 ```
 
-3. Make sure to change your Backend server url in [./src/lib/constants.ts](./src/lib/constants.ts)
+3. Copy .env.example
 
-```typescript
-export const API_URL = "http://localhost:8000/api";   // Your Backend server url
+```bash
+cp .env.example .env
 ```
 
-4. Run the development server
+4. Set up your environment variables in `.env`
+
+```bash
+VITE_BACKEND_URL=http://localhost:8000/api  # Your Backend server url
+```
+
+5. Run the development server
 
 ```bash
 npm run dev
@@ -92,7 +98,7 @@ npm run dev
     │   |    ├── queries/         # React Query-based data fetching hooks
     │   |    └── use-auth.ts      # Hook for accessing auth context
     │   ├── layouts/              # Layout components for wrapping pages
-    │   ├── lib/                  # Utilities and shared logic (fetcher, constants, types, etc.)
+    │   ├── lib/                  # Utilities and shared logic (fetcher, types, etc.)
     │   ├── pages/                # Page-level components (Login, Home, etc.)
     │   ├── schemas/              # Zod validation schemas
     │   ├── routes.tsx            # Route configuration for React Router

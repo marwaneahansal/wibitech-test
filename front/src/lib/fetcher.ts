@@ -14,6 +14,26 @@ export class ApiError extends Error {
   }
 }
 
+/**
+ * Makes an authenticated HTTP request to the specified URL with automatic handling of JSON and access tokens.
+ * 
+ * @param url - The URL to send the request to
+ * @param options - Optional RequestInit object to customize the fetch request
+ * @returns Promise that resolves with the JSON response data
+ * @throws {ApiError} When the response status is not ok (2xx)
+ * 
+ * @example
+ * try {
+ *   const data = await fetcher('https://api.example.com/users', {
+ *     method: 'POST',
+ *     body: JSON.stringify({ name: 'John' })
+ *   });
+ * } catch (error) {
+ *   if (error instanceof ApiError) {
+ *     console.error(`API Error ${error.status}: ${error.data.message}`);
+ *   }
+ * }
+ */
 export const fetcher = async (url: string, options: RequestInit = {}) => {
   const accessToken = localStorage.getItem("accessToken");
 

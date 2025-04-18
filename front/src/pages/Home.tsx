@@ -43,19 +43,21 @@ export const Home = () => {
   return (
     <>
       <section className="space-y-2">
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">
-            Welcome,{" "}
-            <span className="text-primary capitalize">{user?.first_name || user?.username}</span>.
-          </h1>
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div className="gap-y-2">
+            <h1 className="text-2xl font-bold">
+              Welcome,{" "}
+              <span className="text-primary capitalize">{user?.first_name || user?.username}</span>.
+            </h1>
+            <TasksCountMessage tasksCount={tasksCount} />
+          </div>
           <TasksFilter />
         </div>
-        <TasksCountMessage tasksCount={tasksCount} />
       </section>
       <div className="mt-8">
         <TasksList tasks={tasks} />
       </div>
-      <div className="flex items-center justify-between mt-8">
+      <div className="flex flex-col-reverse lg:flex-row lg:items-center justify-between mt-8 gap-4">
         {user?.role === "admin" && (
           <AddTaskDialog>
             <Button variant={"ghost"} className="text-muted-foreground" size={"lg"}>

@@ -20,7 +20,7 @@ export const TaskCard = ({ task }: { task: Task }) => {
   };
 
   return (
-    <div className="px-6 py-4 bg-gray-100 flex items-center justify-between rounded-2xl group gap-x-6">
+    <div className="px-6 py-4 bg-gray-100 flex flex-col lg:flex-row lg:items-center justify-between rounded-2xl group gap-y-2 gap-x-6">
       <div className="space-y-1 flex items-center gap-x-4">
         {task.status === "done" && <Check className="text-primary size-6" />}
         <div>
@@ -40,7 +40,7 @@ export const TaskCard = ({ task }: { task: Task }) => {
           </p>
         </div>
       </div>
-      <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+      <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity self-end">
         {task.status === "in_progress" && (
           <EditTaskDialog task={task}>
             <Button

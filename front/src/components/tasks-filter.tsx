@@ -12,8 +12,6 @@ export const TasksFilter = () => {
   const [query, setQuery] = useState<string>(searchQuery);
   const [statusValue, setStatusValue] = useState<string>(statusQuery);
 
-  const isFilterEnabled = searchQuery !== "" || statusQuery !== "all";
-
   const tasksStatus = [
     {
       label: "All",
@@ -34,28 +32,31 @@ export const TasksFilter = () => {
   };
 
   const filterTasks = () => {
-    if (isFilterEnabled) {
-      setQuery("");
-      setStatusValue("all");
-      searchParams.set("search", "");
-      searchParams.set("status", "all");
-    } else {
-      searchParams.set("search", query);
-      searchParams.set("status", statusValue);
-    }
+    searchParams.set("search", query);
+    searchParams.set("status", statusValue);
+
+    setSearchParams(searchParams);
+  };
+
+  const resetFilters = () => {
+    setQuery("");
+    setStatusValue("all");
+
+    searchParams.set("search", "");
+    searchParams.set("status", "all");
 
     setSearchParams(searchParams);
   };
 
   return (
-    <div className="flex items-center gap-x-4">
+    <div className="flex flex-col md:flex-row md:items-center gap-y-2 gap-x-4">
       <Input
         className="min-w-72"
         placeholder="filter tasks by title"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
       />
-      <Select onValueChange={onStatusChange} defaultValue={statusValue}>
+      <Select onValueChange={onStatusChange} defaultValue={statusValue} value={statusValue}>
         <SelectTrigger id="assignTo" className="min-w-36 w-full">
           <SelectValue placeholder="Assign To" />
         </SelectTrigger>
@@ -68,7 +69,10 @@ export const TasksFilter = () => {
         </SelectContent>
       </Select>
       <Button variant={"outline"} onClick={filterTasks}>
-        {isFilterEnabled ? "Reset" : "Filter"}
+        Filter
+      </Button>
+      <Button variant={"outline"} onClick={resetFilters}>
+        Reset
       </Button>
     </div>
   );

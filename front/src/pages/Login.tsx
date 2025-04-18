@@ -48,8 +48,8 @@ export const Login = () => {
   }
 
   return (
-    <div className="min-h-svh flex items-center justify-center px-24">
-      <Card className="w-[30%]">
+    <div className="min-h-svh flex items-center justify-center px-4 md:px-24">
+      <Card className="w-full md:w-[60%] lg:w-[30%]">
         <Form {...form}>
           <form onSubmit={onSubmit} className="space-y-8">
             <CardHeader>

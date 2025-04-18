@@ -1,8 +1,9 @@
-import { API_URL } from "@/lib/constants";
 import { fetcher } from "@/lib/fetcher";
 import { type User } from "@/lib/types";
 import { createTaskSchema, updateTaskSchema } from "@/schemas/taskSchema";
 import { z } from "zod";
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const getTasks = async ({
   page,
